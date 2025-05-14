@@ -1,0 +1,214 @@
+/* ==============================================
+   Filmhanterare Admin Styles
+   ============================================== */
+
+/* Base Styles */
+.filmhanterare-admin * {
+    box-sizing: border-box;
+}
+
+/* Main Layout */
+.filmhanterare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+.filmhanterare-kolumn {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.filmhanterare-falt {
+    margin-bottom: 15px;
+}
+
+.filmhanterare-falt label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #1d2327;
+    font-size: 14px;
+}
+
+/* Input Fields */
+.filmhanterare-falt textarea,
+.filmhanterare-falt input[type="text"],
+.filmhanterare-falt input[type="number"],
+.filmhanterare-falt input[type="date"],
+.filmhanterare-falt input[type="time"],
+.filmhanterare-falt select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #8c8f94;
+    border-radius: 4px;
+    background-color: #fff;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.07);
+    font-size: 14px;
+    line-height: 1.5;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.filmhanterare-falt textarea {
+    min-height: 300px;
+    resize: vertical;
+}
+
+
+.filmhanterare-falt input:focus,
+.filmhanterare-falt textarea:focus,
+.filmhanterare-falt select:focus {
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+    outline: none;
+}
+
+/* Description Text */
+.filmhanterare-falt .description {
+    font-size: 13px;
+    color: #646970;
+    margin-top: 6px;
+    font-style: italic;
+}
+
+/* Time Input Specific */
+#film_speltid {
+    max-width: 150px;
+}
+
+/* Showtimes Section */
+.visningstider-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.visningstid-post {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    gap: 10px;
+    align-items: center;
+    padding: 10px;
+    background-color: #f6f7f7;
+    border-radius: 4px;
+}
+
+.visningstid-post input {
+    margin: 0;
+}
+
+.visningstid-post .visning-datum {
+    min-width: 120px;
+}
+
+.visningstid-post .visning-tid {
+    min-width: 80px;
+}
+
+.visningstid-post .visning-språk {
+    min-width: 100px;
+}
+
+/* Buttons */
+.button.lägg-till-visning {
+    margin-top: 5px;
+    background: #f0f0f1;
+    border-color: #dcdcde;
+    color: #2c3338;
+}
+
+.button.lägg-till-visning:hover {
+    background: #e2e2e3;
+    border-color: #d0d0d1;
+}
+
+.button.ta-bort-visning {
+    white-space: nowrap;
+    background: #f0f0f1;
+    border-color: #dcdcde;
+    color: #d63638;
+}
+
+.button.ta-bort-visning:hover {
+    background: #f8e8e8;
+    border-color: #e6b3b3;
+    color: #b32d2e;
+}
+
+/* Genre Taxonomy Styles */
+.postbox .taxonomy-film_genre .hndle {
+    border-bottom: 1px solid #dcdcde;
+}
+
+.postbox .taxonomy-film_genre .inside {
+    padding: 10px;
+}
+
+.taxonomy-film_genre .category-tabs {
+    margin-bottom: 10px;
+}
+
+/* Age Rating Select */
+#film_aldersgrans {
+    max-width: 200px;
+}
+
+/* Color indicators for age ratings */
+#film_aldersgrans option[value="B"] { color: #4ab866; }
+#film_aldersgrans option[value="7"] { color: #00a0d2; }
+#film_aldersgrans option[value="11"] { color: #f56e28; }
+#film_aldersgrans option[value="15"] { color: #d63638; }
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .filmhanterare-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 782px) {
+    .visningstid-post {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+    
+    .visningstid-post .ta-bort-visning {
+        grid-column: span 2;
+    }
+
+    .filmhanterare-falt {
+        margin-bottom: 20px;
+    }
+}
+
+/* Small Screens */
+@media (max-width: 480px) {
+    .visningstid-post {
+        grid-template-columns: 1fr;
+    }
+    
+    .visningstid-post .ta-bort-visning {
+        grid-column: span 1;
+    }
+}
+
+/* Animation for adding new showtimes */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.visningstid-post {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Help Text */
+.filmhanterare-hjälptext {
+    font-size: 13px;
+    color: #646970;
+    margin-top: 5px;
+    display: block;
+}
