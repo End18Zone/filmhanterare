@@ -4,18 +4,18 @@ class Filmhanterare_AdminColumns {
         add_filter('manage_film_posts_columns', [$this, 'lägg_till_kolumner']);
         add_action('manage_film_posts_custom_column', [$this, 'rendera_kolumner'], 10, 2);
         add_filter('manage_edit-film_sortable_columns', [$this, 'gör_kolumner_sorterbara']);
-        add_action('admin_head', [$this, 'anpassa_admin_css']);
         add_action('pre_get_posts', [$this, 'hantera_sortering']);
+        add_action('admin_head', [$this, 'anpassa_admin_css']);
     }
     
     public function lägg_till_kolumner($kolumner) {
         $nya_kolumner = [
             'cb' => $kolumner['cb'],
             'title' => $kolumner['title'],
-            'film_genre' => __('Genrer', 'filmhanterare'),
-            'speltid' => __('Speltid', 'filmhanterare'),
-            'aldersgrans' => __('Åldersgräns', 'filmhanterare'),
-            'visningstider' => __('Visningar', 'filmhanterare'),
+            'film_genre' => __('Genres', 'filmhanterare'),
+            'speltid' => __('Runtime', 'filmhanterare'),
+            'aldersgrans' => __('Age Limit', 'filmhanterare'),
+            'visningstider' => __('Showtimes', 'filmhanterare'),
             'date' => $kolumner['date'],
         ];
         return $nya_kolumner;
@@ -34,8 +34,8 @@ class Filmhanterare_AdminColumns {
                     $timmar = floor($total_minuter / 60);
                     $minuter = $total_minuter % 60;
                     printf(
-                        '<span title="%d minuter">%dh %02dm</span>',
-                        $total_minuter,
+                        '<span title="%s">%dh %02dm</span>',
+                        sprintf(_n('%d minute', '%d minutes', $total_minuter, 'filmhanterare'), $total_minuter),
                         $timmar,
                         $minuter
                     );
@@ -47,10 +47,10 @@ class Filmhanterare_AdminColumns {
             case 'aldersgrans':
                 $aldersgrans = get_post_meta($post_id, '_film_aldersgrans', true);
                 $labels = [
-                    'B' => __('Barntillåten', 'filmhanterare'),
-                    '7' => __('7 år', 'filmhanterare'),
-                    '11' => __('11 år', 'filmhanterare'),
-                    '15' => __('15 år', 'filmhanterare')
+                    'B' => __('Child Approved', 'filmhanterare'),
+                    '7' => __('7 years', 'filmhanterare'),
+                    '11' => __('11 years', 'filmhanterare'),
+                    '15' => __('15 years', 'filmhanterare')
                 ];
                 echo isset($labels[$aldersgrans]) ? esc_html($labels[$aldersgrans]) : '<span aria-hidden="true">—</span>';
                 break;
@@ -60,11 +60,13 @@ class Filmhanterare_AdminColumns {
                 if (!empty($visningstider) && is_array($visningstider)) {
                     $antal = count($visningstider);
                     printf(
-                        '<a href="%s" title="%s">%d %s</a>',
+                        '<a href="%s" title="%s">%s</a>',
                         esc_url(get_edit_post_link($post_id)),
-                        __('Redigera visningstider', 'filmhanterare'),
-                        $antal,
-                        _n('visning', 'visningar', $antal, 'filmhanterare')
+                        esc_attr__('Edit showtimes', 'filmhanterare'),
+                        sprintf(
+                            _n('%d showtime', '%d showtimes', $antal, 'filmhanterare'),
+                            $antal
+                        )
                     );
                 } else {
                     echo '<span aria-hidden="true">—</span>';

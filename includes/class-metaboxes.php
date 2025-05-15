@@ -1,40 +1,8 @@
 <?php
 class Filmhanterare_MetaBoxes {
     public function __construct() {
-        // Register taxonomies
-        add_action('init', [$this, 'registrera_genre_taxonomy']);
-        
-        // Metaboxes
         add_action('add_meta_boxes', [$this, 'lägg_till_metaboxes']);
         add_action('save_post', [$this, 'spara_metaboxes'], 10, 2);
-    }
-    
-    public function registrera_genre_taxonomy() {
-        register_taxonomy('film_genre', 'film', [
-            'hierarchical'      => true,
-            'labels'            => $this->få_genre_etiketter(),
-            'show_ui'           => true,
-            'show_admin_column' => true,
-            'query_var'         => true,
-            'rewrite'           => ['slug' => 'film-genre'],
-            'show_in_rest'      => true,
-        ]);
-    }
-    
-    private function få_genre_etiketter() {
-        return [
-            'name'              => 'Genrer',
-            'singular_name'     => 'Genre',
-            'search_items'      => 'Sök genrer',
-            'all_items'         => 'Alla genrer',
-            'parent_item'       => 'Föräldragenre',
-            'parent_item_colon' => 'Föräldragenre:',
-            'edit_item'        => 'Redigera genre',
-            'update_item'      => 'Uppdatera genre',
-            'add_new_item'     => 'Lägg till ny genre',
-            'new_item_name'    => 'Ny genrens namn',
-            'menu_name'       => 'Genrer',
-        ];
     }
     
     public static function ladda_skript($hook) {
@@ -43,11 +11,11 @@ class Filmhanterare_MetaBoxes {
         global $post;
         if ('film' !== $post->post_type) return;
         
-        // Datumväljare
+        // Date picker
         wp_enqueue_style('jquery-ui', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css');
         wp_enqueue_script('jquery-ui-datepicker');
         
-        // Tidväljare
+        // Time picker
         wp_enqueue_style('jquery-timepicker', 'https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css');
         wp_enqueue_script('jquery-timepicker', 'https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js', ['jquery']);
         
@@ -56,12 +24,21 @@ class Filmhanterare_MetaBoxes {
         
         // Plugin JS
         wp_enqueue_script('filmhanterare-admin', FILMHANTERARE_PLUGIN_URL . 'assets/js/admin.js', ['jquery', 'jquery-ui-datepicker', 'jquery-timepicker'], FILMHANTERARE_VERSION, true);
+        
+        // Localize script
+        wp_localize_script('filmhanterare-admin', 'filmhanterare', [
+            'add_showtime' => __('Add Showtime', 'filmhanterare'),
+            'remove'      => __('Remove', 'filmhanterare'),
+            'date'        => __('Date', 'filmhanterare'),
+            'time'        => __('Time', 'filmhanterare'),
+            'language'    => __('Language', 'filmhanterare')
+        ]);
     }
     
     public function lägg_till_metaboxes() {
         add_meta_box(
             'filmhanterare_filminfo',
-            'Filminformation',
+            __('Film Information', 'filmhanterare'),
             [$this, 'rendera_filminfo_metabox'],
             'film',
             'normal',
@@ -72,68 +49,85 @@ class Filmhanterare_MetaBoxes {
     public function rendera_filminfo_metabox($post) {
         wp_nonce_field('filmhanterare_spara_filmdata', 'filmhanterare_film_nonce');
         
-        // Hämta befintliga värden
+        // Get existing values
         $synopsis = get_post_meta($post->ID, '_film_synopsis', true);
         $total_minuter = (int) get_post_meta($post->ID, '_film_speltid', true);
         $aldersgrans = get_post_meta($post->ID, '_film_aldersgrans', true);
         $visningstider = get_post_meta($post->ID, '_film_visningstider', true);
         $visningstider = is_array($visningstider) ? $visningstider : [];
         
-        // Beräkna timmar och minuter
+        // Calculate hours and minutes
         $timmar = floor($total_minuter / 60);
         $minuter = $total_minuter % 60;
         
-        // Åldersgränser
+        // Age limits
         $aldersgranser = [
-            '' => 'Välj åldersgräns',
-            'B' => 'Barntillåten',
-            '7' => 'Från 7 år',
-            '11' => 'Från 11 år',
-            '15' => 'Från 15 år'
+            '' => __('Select age limit', 'filmhanterare'),
+            'B' => __('Child Approved', 'filmhanterare'),
+            '7' => __('From 7 years', 'filmhanterare'),
+            '11' => __('From 11 years', 'filmhanterare'),
+            '15' => __('From 15 years', 'filmhanterare')
         ];
         ?>
         
         <div class="filmhanterare-grid">
-            <!-- Vänster kolumn -->
+            <!-- Left Column -->
             <div class="filmhanterare-kolumn">
                 <div class="filmhanterare-falt">
-                    <label for="film_synopsis">Synopsis</label>
+                    <label for="film_synopsis"><?php _e('Synopsis', 'filmhanterare'); ?></label>
                     <textarea id="film_synopsis" name="film_synopsis" rows="6"><?php echo esc_textarea($synopsis); ?></textarea>
                 </div>
             </div>
             
-            <!-- Höger kolumn -->
+            <!-- Right Column -->
             <div class="filmhanterare-kolumn">
                 <div class="filmhanterare-falt">
-                    <label for="film_speltid">Speltid (minuter)</label>
+                    <label for="film_speltid"><?php _e('Runtime (minutes)', 'filmhanterare'); ?></label>
                     <input type="number" id="film_speltid" name="film_speltid" 
                            value="<?php echo esc_attr($total_minuter); ?>" 
-                           min="1" max="1440" placeholder="Totala minuter">
-                    <p class="description"><?php printf('Beräknad speltid: %d timmar och %d minuter', $timmar, $minuter); ?></p>
+                           min="1" max="1440" placeholder="<?php esc_attr_e('Total minutes', 'filmhanterare'); ?>">
+                    <p class="description">
+                        <?php printf(__('Calculated runtime: %d hours and %d minutes', 'filmhanterare'), $timmar, $minuter); ?>
+                    </p>
                 </div>
                 
                 <div class="filmhanterare-falt">
-                    <label for="film_aldersgrans">Åldersgräns</label>
+                    <label for="film_aldersgrans"><?php _e('Age Limit', 'filmhanterare'); ?></label>
                     <select id="film_aldersgrans" name="film_aldersgrans">
                         <?php foreach ($aldersgranser as $värde => $text) : ?>
-                            <option value="<?php echo esc_attr($värde); ?>" <?php selected($aldersgrans, $värde); ?>><?php echo esc_html($text); ?></option>
+                            <option value="<?php echo esc_attr($värde); ?>" <?php selected($aldersgrans, $värde); ?>>
+                                <?php echo esc_html($text); ?>
+                            </option>
                         <?php endforeach; ?>
                     </select>
                 </div>
                 
                 <div class="filmhanterare-falt">
-                    <label>Visningstider</label>
+                    <label><?php _e('Showtimes', 'filmhanterare'); ?></label>
                     <div class="visningstider-container">
                         <?php foreach ($visningstider as $index => $visning) : ?>
                             <div class="visningstid-post">
-                                <input type="text" name="film_visningstider[<?php echo $index; ?>][datum]" value="<?php echo esc_attr($visning['datum']); ?>" class="visning-datum film-datumväljare" placeholder="Datum">
-                                <input type="text" name="film_visningstider[<?php echo $index; ?>][tid]" value="<?php echo esc_attr($visning['tid']); ?>" class="visning-tid tidväljare" placeholder="HH:MM">
-                                <input type="text" name="film_visningstider[<?php echo $index; ?>][språk]" value="<?php echo esc_attr($visning['språk'] ?? ''); ?>" class="visning-språk" placeholder="Språk">
-                                <button type="button" class="button ta-bort-visning">Ta bort</button>
+                                <input type="text" name="film_visningstider[<?php echo $index; ?>][datum]" 
+                                       value="<?php echo esc_attr($visning['datum']); ?>" 
+                                       class="visning-datum film-datumväljare" 
+                                       placeholder="<?php esc_attr_e('Date', 'filmhanterare'); ?>">
+                                <input type="text" name="film_visningstider[<?php echo $index; ?>][tid]" 
+                                       value="<?php echo esc_attr($visning['tid']); ?>" 
+                                       class="visning-tid tidväljare" 
+                                       placeholder="<?php esc_attr_e('HH:MM', 'filmhanterare'); ?>">
+                                <input type="text" name="film_visningstider[<?php echo $index; ?>][språk]" 
+                                       value="<?php echo esc_attr($visning['språk'] ?? ''); ?>" 
+                                       class="visning-språk" 
+                                       placeholder="<?php esc_attr_e('Language', 'filmhanterare'); ?>">
+                                <button type="button" class="button ta-bort-visning">
+                                    <?php _e('Remove', 'filmhanterare'); ?>
+                                </button>
                             </div>
                         <?php endforeach; ?>
                     </div>
-                    <button type="button" class="button lägg-till-visning">Lägg till visningstid</button>
+                    <button type="button" class="button lägg-till-visning">
+                        <?php _e('Add Showtime', 'filmhanterare'); ?>
+                    </button>
                 </div>
             </div>
         </div>
@@ -149,7 +143,7 @@ class Filmhanterare_MetaBoxes {
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
         if ('film' !== $post->post_type) return;
         
-        // Fält att spara
+        // Fields to save
         $fält = [
             'film_synopsis' => 'wp_kses_post',
             'film_speltid' => 'absint',
@@ -159,15 +153,15 @@ class Filmhanterare_MetaBoxes {
         foreach ($fält as $fältnamn => $saneringsfunktion) {
             if (isset($_POST[$fältnamn])) {
                 $värde = call_user_func($saneringsfunktion, $_POST[$fältnamn]);
-                // Validera speltid
+                // Validate runtime
                 if ($fältnamn === 'film_speltid') {
-                    $värde = max(1, min(1440, $värde)); // Säkerställer 1-1440 minuter (24 timmar)
+                    $värde = max(1, min(1440, $värde)); // Ensure 1-1440 minutes (24 hours)
                 }
                 update_post_meta($post_id, '_' . $fältnamn, $värde);
             }
         }
         
-        // Hantera visningstider
+        // Handle showtimes
         $visningstider = [];
         if (!empty($_POST['film_visningstider'])) {
             foreach ($_POST['film_visningstider'] as $visning) {

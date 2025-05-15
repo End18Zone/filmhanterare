@@ -1,0 +1,160 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Filmhanterare 2.0.0\n"
+"POT-Creation-Date: 2023-11-15 12:00+0000\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0.1\n"
+"X-Domain: filmhanterare\n"
+
+#: filmhanterare.php:6
+msgid "Ett avancerat system för att hantera filmer som anpassad posttyp"
+msgstr ""
+
+#: includes/class-post-type.php:10
+msgid "Films"
+msgstr ""
+
+#: includes/class-post-type.php:11
+msgid "Film"
+msgstr ""
+
+#: includes/class-metaboxes.php:45
+msgid "Film Information"
+msgstr ""
+
+#: includes/class-metaboxes.php:50
+msgid "Synopsis"
+msgstr ""
+
+#: includes/class-metaboxes.php:55
+msgid "Runtime (minutes)"
+msgstr ""
+
+#: includes/class-metaboxes.php:56
+msgid "Total minutes"
+msgstr ""
+
+#: includes/class-metaboxes.php:57
+msgid "Calculated runtime: %d hours and %d minutes"
+msgstr ""
+
+#: includes/class-metaboxes.php:62
+msgid "Age Limit"
+msgstr ""
+
+#: includes/class-metaboxes.php:63
+msgid "Select age limit"
+msgstr ""
+
+#: includes/class-metaboxes.php:64
+msgid "Child Approved"
+msgstr ""
+
+#: includes/class-metaboxes.php:65
+msgid "From 7 years"
+msgstr ""
+
+#: includes/class-metaboxes.php:66
+msgid "From 11 years"
+msgstr ""
+
+#: includes/class-metaboxes.php:67
+msgid "From 15 years"
+msgstr ""
+
+#: includes/class-metaboxes.php:72
+msgid "Showtimes"
+msgstr ""
+
+#: includes/class-metaboxes.php:73
+msgid "Date"
+msgstr ""
+
+#: includes/class-metaboxes.php:74
+msgid "HH:MM"
+msgstr ""
+
+#: includes/class-metaboxes.php:75
+msgid "Language"
+msgstr ""
+
+#: includes/class-metaboxes.php:76
+msgid "Remove"
+msgstr ""
+
+#: includes/class-metaboxes.php:77
+msgid "Add Showtime"
+msgstr ""
+
+#: includes/class-admin-columns.php:45
+msgid "Genres"
+msgstr ""
+
+#: includes/class-admin-columns.php:46
+msgid "Runtime"
+msgstr ""
+
+#: includes/class-admin-columns.php:47
+msgid "Age Limit"
+msgstr ""
+
+#: includes/class-admin-columns.php:48
+msgid "Showtimes"
+msgstr ""
+
+#: includes/class-admin-columns.php:53
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-admin-columns.php:54
+msgid "Child Approved"
+msgstr ""
+
+#: includes/class-admin-columns.php:55
+msgid "7 years"
+msgstr ""
+
+#: includes/class-admin-columns.php:56
+msgid "11 years"
+msgstr ""
+
+#: includes/class-admin-columns.php:57
+msgid "15 years"
+msgstr ""
+
+#: includes/class-admin-columns.php:58
+msgid "Edit showtimes"
+msgstr ""
+
+#: includes/class-admin-columns.php:59
+msgid "%d showtime"
+msgid_plural "%d showtimes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-rest-api.php:45
+msgid "Film plot"
+msgstr ""
+
+#: includes/class-rest-api.php:46
+msgid "Total runtime in minutes"
+msgstr ""
+
+#: includes/class-rest-api.php:47
+msgid "Age rating"
+msgstr ""
+
+#: includes/class-rest-api.php:48
+msgid "List of showtimes"
+msgstr ""
+
+#: includes/class-rest-api.php:49
+msgid "Calculated runtime in hours and minutes"
+msgstr ""

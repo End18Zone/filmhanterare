@@ -47,9 +47,9 @@ class Filmhanterare_RestAPI {
         foreach ($fält as $fält => $saneringsfunktion) {
             if (isset($värde[$fält])) {
                 $rensat_värde = call_user_func($saneringsfunktion, $värde[$fält]);
-                // Extra validering för speltid
+                // Extra validation for runtime
                 if ($fält === 'speltid') {
-                    $rensat_värde = max(1, min(1440, $rensat_värde)); // 1-1440 minuter (24 timmar)
+                    $rensat_värde = max(1, min(1440, $rensat_värde)); // 1-1440 minutes (24 hours)
                 }
                 update_post_meta($post_id, '_film_' . $fält, $rensat_värde);
             }
@@ -76,12 +76,12 @@ class Filmhanterare_RestAPI {
             'properties' => [
                 'synopsis' => [
                     'type' => 'string',
-                    'description' => 'Filmens handling',
+                    'description' => __('Film plot', 'filmhanterare'),
                     'context' => ['view', 'edit'],
                 ],
                 'speltid' => [
                     'type' => 'integer',
-                    'description' => 'Total speltid i minuter',
+                    'description' => __('Total runtime in minutes', 'filmhanterare'),
                     'context' => ['view', 'edit'],
                     'minimum' => 1,
                     'maximum' => 1440,
@@ -89,12 +89,12 @@ class Filmhanterare_RestAPI {
                 'aldersgrans' => [
                     'type' => 'string',
                     'enum' => ['', 'B', '7', '11', '15'],
-                    'description' => 'Åldersgräns för filmen',
+                    'description' => __('Age rating', 'filmhanterare'),
                     'context' => ['view', 'edit'],
                 ],
                 'visningstider' => [
                     'type' => 'array',
-                    'description' => 'Lista över visningstider',
+                    'description' => __('List of showtimes', 'filmhanterare'),
                     'context' => ['view', 'edit'],
                     'items' => [
                         'type' => 'object',
@@ -118,7 +118,7 @@ class Filmhanterare_RestAPI {
                 ],
                 'beraknad_speltid' => [
                     'type' => 'object',
-                    'description' => 'Beräknad speltid i timmar och minuter',
+                    'description' => __('Calculated runtime in hours and minutes', 'filmhanterare'),
                     'context' => ['view'],
                     'readonly' => true,
                     'properties' => [
