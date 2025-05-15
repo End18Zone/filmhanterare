@@ -17,13 +17,19 @@ class Filmhanterare_RestAPI {
         
         return [
             'synopsis' => get_post_meta($post_id, '_film_synopsis', true),
-            'utgivningsdatum' => get_post_meta($post_id, '_film_utgivningsdatum', true),
-            'utgivningsland' => get_post_meta($post_id, '_film_utgivningsland', true),
-            'speltid_timmar' => (int) get_post_meta($post_id, '_film_speltid_timmar', true),
-            'speltid_minuter' => (int) get_post_meta($post_id, '_film_speltid_minuter', true),
-            'skadespelare' => get_post_meta($post_id, '_film_skadespelare', true),
+            'speltid' => (int) get_post_meta($post_id, '_film_speltid', true),
             'aldersgrans' => get_post_meta($post_id, '_film_aldersgrans', true),
             'visningstider' => get_post_meta($post_id, '_film_visningstider', true),
+            'beraknad_speltid' => $this->berakna_speltid(get_post_meta($post_id, '_film_speltid', true)),
+        ];
+    }
+    
+    private function berakna_speltid($total_minuter) {
+        $total_minuter = (int) $total_minuter;
+        return [
+            'timmar' => floor($total_minuter / 60),
+            'minuter' => $total_minuter % 60,
+            'total_minuter' => $total_minuter,
         ];
     }
     
@@ -34,17 +40,18 @@ class Filmhanterare_RestAPI {
         
         $fält = [
             'synopsis' => 'wp_kses_post',
-            'utgivningsdatum' => 'sanitize_text_field',
-            'utgivningsland' => 'sanitize_text_field',
-            'speltid_timmar' => 'absint',
-            'speltid_minuter' => 'absint',
-            'skadespelare' => 'sanitize_textarea_field',
+            'speltid' => 'absint',
             'aldersgrans' => 'sanitize_text_field',
         ];
         
         foreach ($fält as $fält => $saneringsfunktion) {
             if (isset($värde[$fält])) {
-                update_post_meta($post_id, '_film_' . $fält, call_user_func($saneringsfunktion, $värde[$fält]));
+                $rensat_värde = call_user_func($saneringsfunktion, $värde[$fält]);
+                // Extra validering för speltid
+                if ($fält === 'speltid') {
+                    $rensat_värde = max(1, min(1440, $rensat_värde)); // 1-1440 minuter (24 timmar)
+                }
+                update_post_meta($post_id, '_film_' . $fält, $rensat_värde);
             }
         }
         
@@ -69,48 +76,60 @@ class Filmhanterare_RestAPI {
             'properties' => [
                 'synopsis' => [
                     'type' => 'string',
-                    'description' => 'Filmens synopsis',
+                    'description' => 'Filmens handling',
+                    'context' => ['view', 'edit'],
                 ],
-                'utgivningsdatum' => [
-                    'type' => 'string',
-                    'format' => 'date',
-                ],
-                'utgivningsland' => [
-                    'type' => 'string',
-                    'enum' => ['', 'SE', 'US', 'UK', 'DE', 'FR', 'JP', 'KR', 'IN'],
-                ],
-                'speltid_timmar' => [
+                'speltid' => [
                     'type' => 'integer',
-                    'description' => 'Speltid i timmar',
-                ],
-                'speltid_minuter' => [
-                    'type' => 'integer',
-                    'description' => 'Speltid i minuter',
-                ],
-                'skadespelare' => [
-                    'type' => 'string',
-                    'description' => 'Skådespelare i filmen',
+                    'description' => 'Total speltid i minuter',
+                    'context' => ['view', 'edit'],
+                    'minimum' => 1,
+                    'maximum' => 1440,
                 ],
                 'aldersgrans' => [
                     'type' => 'string',
-                    'enum' => ['', 'B', '7', '11', '15', 'PG', 'R'],
+                    'enum' => ['', 'B', '7', '11', '15'],
+                    'description' => 'Åldersgräns för filmen',
+                    'context' => ['view', 'edit'],
                 ],
                 'visningstider' => [
                     'type' => 'array',
+                    'description' => 'Lista över visningstider',
+                    'context' => ['view', 'edit'],
                     'items' => [
                         'type' => 'object',
                         'properties' => [
                             'datum' => [
                                 'type' => 'string',
                                 'format' => 'date',
+                                'context' => ['view', 'edit'],
                             ],
                             'tid' => [
                                 'type' => 'string',
                                 'pattern' => '^([01]?[0-9]|2[0-3]):[0-5][0-9]$',
+                                'context' => ['view', 'edit'],
                             ],
                             'språk' => [
                                 'type' => 'string',
+                                'context' => ['view', 'edit'],
                             ],
+                        ],
+                    ],
+                ],
+                'beraknad_speltid' => [
+                    'type' => 'object',
+                    'description' => 'Beräknad speltid i timmar och minuter',
+                    'context' => ['view'],
+                    'readonly' => true,
+                    'properties' => [
+                        'timmar' => [
+                            'type' => 'integer',
+                        ],
+                        'minuter' => [
+                            'type' => 'integer',
+                        ],
+                        'total_minuter' => [
+                            'type' => 'integer',
                         ],
                     ],
                 ],
