@@ -3,7 +3,7 @@
  * Plugin Name: Filmhanterare
  * Beskrivning: Ett avancerat system för att hantera filmer som anpassad posttyp
  * Version: 2.0.0
- * Författare: Ditt Namn
+ * Författare: Jamal
  */
 
 defined('ABSPATH') || exit;
