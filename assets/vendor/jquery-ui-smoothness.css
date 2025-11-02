@@ -1,0 +1,8 @@
+/* Bundled jQuery UI smoothness theme (trimmed snapshot)
+   Recommended: Replace with the full official file from https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css
+*/
+.ui-datepicker { font-family: inherit; font-size: 13px; }
+.ui-datepicker .ui-datepicker-header { background: #f6f6f6; border: 1px solid #ddd; padding: 6px; }
+.ui-datepicker table { width: 100%; border-collapse: collapse; }
+.ui-datepicker td { padding: 4px; text-align: center; }
+.ui-datepicker th { padding: 6px; text-align: center; }

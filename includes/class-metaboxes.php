@@ -13,16 +13,17 @@ class Filmhanterare_MetaBoxes {
         global $post;
         if ('film' !== $post->post_type) return;
         
-        // Date picker (register and enqueue) - using Google CDN theme for jQuery UI CSS
-        wp_register_style('filmhanterare-jquery-ui-style', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css', [], '1.12.1');
-        wp_enqueue_style('filmhanterare-jquery-ui-style');
-        wp_enqueue_script('jquery-ui-datepicker');
+    // Date picker: use bundled jQuery UI theme (local)
+    wp_register_style('filmhanterare-jquery-ui-style', FILMHANTERARE_PLUGIN_URL . 'assets/vendor/jquery-ui-smoothness.css', [], '1.12.1');
+    wp_enqueue_style('filmhanterare-jquery-ui-style');
+    // datepicker script is provided by WP core
+    wp_enqueue_script('jquery-ui-datepicker');
 
-        // Time picker (register and enqueue from CDN)
-        wp_register_style('filmhanterare-timepicker-style', 'https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css', [], '1.3.5');
-        wp_register_script('filmhanterare-timepicker', 'https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js', ['jquery'], '1.3.5', true);
-        wp_enqueue_style('filmhanterare-timepicker-style');
-        wp_enqueue_script('filmhanterare-timepicker');
+    // Time picker: use bundled library under assets/vendor
+    wp_register_style('filmhanterare-timepicker-style', FILMHANTERARE_PLUGIN_URL . 'assets/vendor/jquery-timepicker.min.css', [], '1.3.5');
+    wp_register_script('filmhanterare-timepicker', FILMHANTERARE_PLUGIN_URL . 'assets/vendor/jquery-timepicker.min.js', ['jquery'], '1.3.5', true);
+    wp_enqueue_style('filmhanterare-timepicker-style');
+    wp_enqueue_script('filmhanterare-timepicker');
 
         // Plugin CSS
         wp_register_style('filmhanterare-admin', FILMHANTERARE_PLUGIN_URL . 'assets/css/admin.css', [], FILMHANTERARE_VERSION);

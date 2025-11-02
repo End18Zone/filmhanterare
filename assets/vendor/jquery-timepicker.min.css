@@ -1,0 +1,7 @@
+/* Bundled jquery-timepicker CSS (trimmed)
+   Replace with upstream copy if you need full styling: https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css
+*/
+.ui-timepicker-container { max-width: 220px; background:#fff; border:1px solid #ddd; }
+.ui-timepicker-list { list-style:none; margin:0; padding:6px; }
+.ui-timepicker-list li { padding:4px 6px; cursor:pointer; }
+.ui-timepicker-list li:hover { background:#f0f0f0; }
