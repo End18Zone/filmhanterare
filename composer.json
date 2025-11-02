@@ -8,5 +8,10 @@
       "Filmhanterare\\": "includes/"
     }
   },
-  "require": {}
+  "require": {},
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.7",
+    "wp-coding-standards/wpcs": "^2.3",
+    "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1"
+  }
 }
