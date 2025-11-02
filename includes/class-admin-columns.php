@@ -1,4 +1,6 @@
 <?php
+namespace Filmhanterare;
+
 class Filmhanterare_AdminColumns {
     public function __construct() {
         add_filter('manage_film_posts_columns', [$this, 'lägg_till_kolumner']);
@@ -25,7 +27,7 @@ class Filmhanterare_AdminColumns {
         switch ($kolumn) {
             case 'film_genre':
                 $genres = get_the_term_list($post_id, 'film_genre', '', ', ', '');
-                echo $genres ?: '<span aria-hidden="true">—</span>';
+                echo $genres ? wp_kses_post($genres) : '<span aria-hidden="true">—</span>';
                 break;
                 
             case 'speltid':
@@ -33,9 +35,10 @@ class Filmhanterare_AdminColumns {
                 if ($total_minuter > 0) {
                     $timmar = floor($total_minuter / 60);
                     $minuter = $total_minuter % 60;
+                    $title = sprintf(_n('%d minute', '%d minutes', $total_minuter, 'filmhanterare'), $total_minuter);
                     printf(
                         '<span title="%s">%dh %02dm</span>',
-                        sprintf(_n('%d minute', '%d minutes', $total_minuter, 'filmhanterare'), $total_minuter),
+                        esc_attr($title),
                         $timmar,
                         $minuter
                     );

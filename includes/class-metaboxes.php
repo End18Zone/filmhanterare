@@ -1,4 +1,6 @@
 <?php
+namespace Filmhanterare;
+
 class Filmhanterare_MetaBoxes {
     public function __construct() {
         add_action('add_meta_boxes', [$this, 'lägg_till_metaboxes']);
@@ -11,21 +13,26 @@ class Filmhanterare_MetaBoxes {
         global $post;
         if ('film' !== $post->post_type) return;
         
-        // Date picker
-        wp_enqueue_style('jquery-ui', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css');
+        // Date picker (register and enqueue) - using Google CDN theme for jQuery UI CSS
+        wp_register_style('filmhanterare-jquery-ui-style', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css', [], '1.12.1');
+        wp_enqueue_style('filmhanterare-jquery-ui-style');
         wp_enqueue_script('jquery-ui-datepicker');
-        
-        // Time picker
-        wp_enqueue_style('jquery-timepicker', 'https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css');
-        wp_enqueue_script('jquery-timepicker', 'https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js', ['jquery']);
-        
+
+        // Time picker (register and enqueue from CDN)
+        wp_register_style('filmhanterare-timepicker-style', 'https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css', [], '1.3.5');
+        wp_register_script('filmhanterare-timepicker', 'https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js', ['jquery'], '1.3.5', true);
+        wp_enqueue_style('filmhanterare-timepicker-style');
+        wp_enqueue_script('filmhanterare-timepicker');
+
         // Plugin CSS
-        wp_enqueue_style('filmhanterare-admin', FILMHANTERARE_PLUGIN_URL . 'assets/css/admin.css', [], FILMHANTERARE_VERSION);
-        
+        wp_register_style('filmhanterare-admin', FILMHANTERARE_PLUGIN_URL . 'assets/css/admin.css', [], FILMHANTERARE_VERSION);
+        wp_enqueue_style('filmhanterare-admin');
+
         // Plugin JS
-        wp_enqueue_script('filmhanterare-admin', FILMHANTERARE_PLUGIN_URL . 'assets/js/admin.js', ['jquery', 'jquery-ui-datepicker', 'jquery-timepicker'], FILMHANTERARE_VERSION, true);
-        
-        // Localize script
+        wp_register_script('filmhanterare-admin', FILMHANTERARE_PLUGIN_URL . 'assets/js/admin.js', ['jquery', 'jquery-ui-datepicker', 'filmhanterare-timepicker'], FILMHANTERARE_VERSION, true);
+        wp_enqueue_script('filmhanterare-admin');
+
+        // Localize script safely
         wp_localize_script('filmhanterare-admin', 'filmhanterare', [
             'add_showtime' => __('Add Showtime', 'filmhanterare'),
             'remove'      => __('Remove', 'filmhanterare'),
@@ -105,18 +112,22 @@ class Filmhanterare_MetaBoxes {
                 <div class="filmhanterare-falt">
                     <label><?php _e('Showtimes', 'filmhanterare'); ?></label>
                     <div class="visningstider-container">
-                        <?php foreach ($visningstider as $index => $visning) : ?>
+                        <?php foreach ($visningstider as $index => $visning) :
+                            $datum = isset($visning['datum']) ? $visning['datum'] : '';
+                            $tid = isset($visning['tid']) ? $visning['tid'] : '';
+                            $sprak = isset($visning['språk']) ? $visning['språk'] : '';
+                        ?>
                             <div class="visningstid-post">
                                 <input type="text" name="film_visningstider[<?php echo $index; ?>][datum]" 
-                                       value="<?php echo esc_attr($visning['datum']); ?>" 
+                                       value="<?php echo esc_attr($datum); ?>" 
                                        class="visning-datum film-datumväljare" 
                                        placeholder="<?php esc_attr_e('Date', 'filmhanterare'); ?>">
                                 <input type="text" name="film_visningstider[<?php echo $index; ?>][tid]" 
-                                       value="<?php echo esc_attr($visning['tid']); ?>" 
+                                       value="<?php echo esc_attr($tid); ?>" 
                                        class="visning-tid tidväljare" 
                                        placeholder="<?php esc_attr_e('HH:MM', 'filmhanterare'); ?>">
                                 <input type="text" name="film_visningstider[<?php echo $index; ?>][språk]" 
-                                       value="<?php echo esc_attr($visning['språk'] ?? ''); ?>" 
+                                       value="<?php echo esc_attr($sprak); ?>" 
                                        class="visning-språk" 
                                        placeholder="<?php esc_attr_e('Language', 'filmhanterare'); ?>">
                                 <button type="button" class="button ta-bort-visning">

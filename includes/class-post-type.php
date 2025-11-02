@@ -1,7 +1,10 @@
 <?php
+namespace Filmhanterare;
+
 class Filmhanterare_PostType {
     public function __construct() {
         add_action('init', [$this, 'registrera_posttyp']);
+        add_action('init', [$this, 'registrera_taxonomi']);
     }
     
     public function registrera_posttyp() {
@@ -58,5 +61,33 @@ class Filmhanterare_PostType {
         ];
         
         register_post_type('film', $args);
+    }
+
+    /**
+     * Register the film_genre taxonomy used by the post type.
+     */
+    public function registrera_taxonomi() {
+        $labels = [
+            'name' => _x('Genres', 'taxonomy general name', 'filmhanterare'),
+            'singular_name' => _x('Genre', 'taxonomy singular name', 'filmhanterare'),
+            'search_items' => __('Search Genres', 'filmhanterare'),
+            'all_items' => __('All Genres', 'filmhanterare'),
+            'edit_item' => __('Edit Genre', 'filmhanterare'),
+            'update_item' => __('Update Genre', 'filmhanterare'),
+            'add_new_item' => __('Add New Genre', 'filmhanterare'),
+            'new_item_name' => __('New Genre Name', 'filmhanterare'),
+            'menu_name' => __('Genres', 'filmhanterare'),
+        ];
+
+        $args = [
+            'labels' => $labels,
+            'hierarchical' => false,
+            'public' => true,
+            'show_ui' => true,
+            'show_in_rest' => true,
+            'rewrite' => ['slug' => 'genre'],
+        ];
+
+        register_taxonomy('film_genre', ['film'], $args);
     }
 }

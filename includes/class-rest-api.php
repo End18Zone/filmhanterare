@@ -1,4 +1,6 @@
 <?php
+namespace Filmhanterare;
+
 class Filmhanterare_RestAPI {
     public function __construct() {
         add_action('rest_api_init', [$this, 'registrera_rest_fält']);
@@ -35,8 +37,14 @@ class Filmhanterare_RestAPI {
     
     public function uppdatera_film_info($värde, $objekt, $fältnamn) {
         $post_id = $objekt->ID;
-        
-        if (!is_array($värde)) return;
+        // Permission check
+        if (! current_user_can('edit_post', $post_id)) {
+            return new WP_Error('rest_forbidden', __('You are not allowed to edit this post.', 'filmhanterare'), ['status' => 403]);
+        }
+
+        if (! is_array($värde)) {
+            return new WP_Error('rest_invalid_param', __('Invalid data provided.', 'filmhanterare'), ['status' => 400]);
+        }
         
         $fält = [
             'synopsis' => 'wp_kses_post',
@@ -68,6 +76,9 @@ class Filmhanterare_RestAPI {
             }
             update_post_meta($post_id, '_film_visningstider', $visningstider);
         }
+        
+        // Indicate success
+        return true;
     }
     
     public function få_film_info_schema() {

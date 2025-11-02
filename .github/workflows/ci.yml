@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  phpcs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v4
+        with:
+          php-version: '8.1'
+      - name: Install dependencies
+        run: |
+          composer install --no-progress --no-suggest
+      - name: Run PHPCS
+        run: |
+          vendor/bin/phpcs --standard=phpcs.xml.dist --extensions=php
