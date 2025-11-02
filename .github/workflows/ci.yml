@@ -1,24 +1,3 @@
-name: CI
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-jobs:
-  phpcs:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup PHP
-        # Use a stable released version tag for the setup-php action that the runner can resolve
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.1'
-      - name: Install dependencies
-        run: |
-          composer install --no-progress --no-suggest
-      - name: Run PHPCS
-        run: |
-          vendor/bin/phpcs --standard=phpcs.xml.dist --extensions=php
+## Workflow disabled
+# The CI workflow previously defined here has been disabled per user request.
+# To re-enable, restore a valid workflow configuration.
