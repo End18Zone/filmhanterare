@@ -13,7 +13,7 @@ $genres = get_the_terms(get_the_ID(), 'film_genre');
 $featured_image = get_the_post_thumbnail_url(get_the_ID(), 'full');
 ?>
 
-<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+<article id="post-<?php the_ID(); ?>" <?php post_class(); ?> itemscope itemtype="https://schema.org/Movie">
     <div class="film-header-backdrop" style="background-image: url('<?php echo esc_url($featured_image); ?>');">
         <div class="film-header-overlay"></div>
         <div class="film-header-blurred" style="background-image: url('<?php echo esc_url($featured_image); ?>');"></div>
@@ -25,7 +25,8 @@ $featured_image = get_the_post_thumbnail_url(get_the_ID(), 'full');
                         <?php if (has_post_thumbnail()) : ?>
                             <?php the_post_thumbnail('large', [
                                 'class' => 'film-poster',
-                                'alt' => get_the_title()
+                                'alt' => get_the_title(),
+                                'loading' => 'lazy'
                             ]); ?>
                         <?php endif; ?>
                     </div>
@@ -71,7 +72,7 @@ $featured_image = get_the_post_thumbnail_url(get_the_ID(), 'full');
                         </div>
                     </header>
                     
-                    <div class="film-synopsis">
+                    <div class="film-synopsis" itemprop="description">
                         <h3><?php esc_html_e('Synopsis', 'generatepress'); ?></h3>
                         <div class="entry-content">
                             <?php echo $synopsis ? wpautop(wp_kses_post($synopsis)) : ''; ?>
@@ -79,6 +80,7 @@ $featured_image = get_the_post_thumbnail_url(get_the_ID(), 'full');
                     </div>
                     
                     <?php if (!empty($visningstider) && is_array($visningstider)) : ?>
+                        <?php do_action('filmhanterare_before_showtimes', get_the_ID(), $visningstider); ?>
                         <div class="film-showtimes-section">
                             <h3><?php esc_html_e('Showtimes', 'filmhanterare'); ?></h3>
                             <div class="showtimes-grid">
@@ -95,18 +97,18 @@ $featured_image = get_the_post_thumbnail_url(get_the_ID(), 'full');
                                         $timestamp = strtotime($visning['datum'] . ' ' . $visning['tid']);
                                         if ($timestamp !== false) :
                                         ?>
-                                        <div class="showtime-card">
+                                        <div class="showtime-card" itemscope itemtype="https://schema.org/ScreeningEvent">
                                             <div class="showtime-date">
-                                                <time class="showtime-full" datetime="<?php echo esc_attr(date('Y-m-d\TH:i:s', $timestamp)); ?>">
+                                                <time class="showtime-full" datetime="<?php echo esc_attr(date('Y-m-d\TH:i:s', $timestamp)); ?>" itemprop="startDate">
                                                     <div class="showtime-day"><?php echo esc_html(wp_date('D', $timestamp)); ?></div>
                                                     <div class="showtime-number"><?php echo esc_html(wp_date('j', $timestamp)); ?></div>
                                                     <div class="showtime-month"><?php echo esc_html(wp_date('M', $timestamp)); ?></div>
                                                 </time>
                                             </div>
                                             <div class="showtime-info">
-                                                <span class="showtime-time"><?php echo esc_html(wp_date('H:i', $timestamp)); ?></span>
+                                                <span class="showtime-time" itemprop="startDate"><?php echo esc_html(wp_date('H:i', $timestamp)); ?></span>
                                                 <?php if (!empty($visning['språk'])) : ?>
-                                                    <span class="showtime-language">(<?php echo esc_html($visning['språk']); ?>)</span>
+                                                    <span class="showtime-language" itemprop="description">(<?php echo esc_html($visning['språk']); ?>)</span>
                                                 <?php endif; ?>
                                             </div>
                                         </div>
@@ -117,6 +119,7 @@ $featured_image = get_the_post_thumbnail_url(get_the_ID(), 'full');
                                 ?>
                             </div>
                         </div>
+                        <?php do_action('filmhanterare_after_showtimes', get_the_ID(), $visningstider); ?>
                     <?php endif; ?>
                 </div>
             </div>

@@ -44,17 +44,25 @@ get_header(); ?>
 
                 do_action('generate_before_loop', 'archive');
                 
+                /**
+                 * Allow customization before the archive grid (e.g. filters)
+                 *
+                 * @since 2.0.0
+                 */
+                do_action('filmhanterare_archive_before_grid');
+
                 echo '<div class="film-archive-grid">';
                 while (have_posts()) : the_post();
                     ?>
-                    <article <?php post_class('film-archive-item'); ?>>
+                    <article <?php post_class('film-archive-item'); ?> itemscope itemtype="https://schema.org/Movie">
                         <div class="film-archive-poster">
                             <a href="<?php the_permalink(); ?>">
                                 <?php 
                                 if (has_post_thumbnail()) {
                                     the_post_thumbnail('medium', [
                                         'class' => 'film-archive-thumbnail',
-                                        'alt' => get_the_title()
+                                        'alt' => get_the_title(),
+                                        'loading' => 'lazy'
                                     ]);
                                 } else {
                                     echo '<div class="film-archive-placeholder"></div>';
@@ -64,15 +72,15 @@ get_header(); ?>
                         </div>
                         <div class="film-archive-details">
                             <h2 class="film-archive-item-title">
-                                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                                <a href="<?php the_permalink(); ?>" itemprop="url"><span itemprop="name"><?php the_title(); ?></span></a>
                             </h2>
-                            <div class="film-archive-meta">
+                            <div class="film-archive-genres" itemprop="genre">
                                 <?php
                                 $speltid = (int) get_post_meta(get_the_ID(), '_film_speltid', true);
                                 if ($speltid > 0) {
                                     $timmar = floor($speltid / 60);
                                     $minuter = $speltid % 60;
-                                    printf(
+                                        echo '<a href="' . esc_url(get_term_link($genre)) . '" class="film-genre-tag">' . esc_html($genre->name) . '</a>';
                                         '<span class="film-runtime" title="%s">%dh %02dm</span>',
                                         sprintf(
                                             _n('%d minute', '%d minutes', $speltid, 'filmhanterare'),
@@ -81,7 +89,32 @@ get_header(); ?>
                                         $timmar,
                                         $minuter
                                     );
-                                }
+                echo '</div>';
+
+                /**
+                 * Allow customization after the archive grid
+                 *
+                 * @since 2.0.0
+                 */
+                do_action('filmhanterare_archive_after_grid');
+
+                // Pagination
+                global $wp_query;
+                $big = 999999999; // need an unlikely integer
+                $pagination = paginate_links([
+                    'base' => str_replace($big, '%#%', esc_url(get_pagenum_link($big))),
+                    'format' => '?paged=%#%',
+                    'current' => max(1, get_query_var('paged')),
+                    'total' => $wp_query->max_num_pages,
+                    'type' => 'list',
+                    'mid_size' => 1,
+                ]);
+
+                if ($pagination) {
+                    echo '<nav class="film-archive-pagination" aria-label="' . esc_attr__('Film archive pagination', 'filmhanterare') . '">';
+                    echo $pagination; // already escaped by paginate_links
+                    echo '</nav>';
+                }
                                 
                                 $aldersgrans = get_post_meta(get_the_ID(), '_film_aldersgrans', true);
                                 if ($aldersgrans) {
