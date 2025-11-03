@@ -41,7 +41,8 @@ if (file_exists(FILMHANTERARE_PLUGIN_DIR . 'vendor/autoload.php')) {
         'includes/class-post-type.php',
         'includes/class-metaboxes.php',
         'includes/class-admin-columns.php',
-        'includes/class-rest-api.php'
+        'includes/class-rest-api.php',
+        'includes/class-blocks.php'
     ];
 
     foreach ($required_files as $file) {
@@ -56,6 +57,7 @@ function filmhanterare_init() {
     new \Filmhanterare\Filmhanterare_MetaBoxes();
     new \Filmhanterare\Filmhanterare_AdminColumns();
     new \Filmhanterare\Filmhanterare_RestAPI();
+    new \Filmhanterare\Filmhanterare_Blocks();
     
     // Load scripts and styles
     add_action('admin_enqueue_scripts', [\Filmhanterare\Filmhanterare_MetaBoxes::class, 'ladda_skript']);

@@ -1,0 +1,69 @@
+/* Block Editor Styles */
+.film-header {
+    margin-bottom: 2em;
+}
+
+.film-poster img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.film-title {
+    margin-top: 0;
+}
+
+.film-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    margin: 1em 0;
+}
+
+.film-certification,
+.film-runtime {
+    display: inline-block;
+    padding: 0.3em 0.8em;
+    border-radius: 4px;
+    background: #f0f0f0;
+    font-size: 0.9em;
+}
+
+.film-genres {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+}
+
+.film-genre-tag {
+    display: inline-block;
+    padding: 0.3em 0.8em;
+    border-radius: 4px;
+    background: #e0e0e0;
+    text-decoration: none;
+    color: inherit;
+}
+
+.film-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Placeholder styling */
+.components-placeholder {
+    padding: 1em;
+    background: #f7f7f7;
+    border: 1px dashed #ccc;
+    text-align: center;
+}
+
+.components-placeholder__label {
+    font-weight: bold;
+    margin-bottom: 0.5em;
+}
+
+.components-placeholder__instructions {
+    color: #757575;
+    font-size: 0.9em;
+}

@@ -42,7 +42,7 @@ class Filmhanterare_PostType {
             'label'               => __('Film', 'filmhanterare'),
             'description'         => __('Film database', 'filmhanterare'),
             'labels'              => $labels,
-            'supports'           => ['title', 'editor', 'thumbnail'],
+            'supports'           => ['title', 'editor', 'thumbnail', 'custom-fields', 'block-templates'],
             'taxonomies'         => ['film_genre'],
             'hierarchical'       => false,
             'public'             => true,
@@ -50,6 +50,27 @@ class Filmhanterare_PostType {
             'show_in_menu'      => true,
             'menu_position'     => 5,
             'menu_icon'         => 'dashicons-video-alt3',
+            'template'          => [
+                ['core/group', ['className' => 'film-header'], [
+                    ['core/columns', [], [
+                        ['core/column', ['width' => 33], [
+                            ['core/image', ['className' => 'film-poster']]
+                        ]],
+                        ['core/column', ['width' => 67], [
+                            ['core/heading', ['level' => 1, 'className' => 'film-title']],
+                            ['core/group', ['className' => 'film-meta'], [
+                                ['filmhanterare/film-details', []]
+                            ]]
+                        ]]
+                    ]]
+                ]],
+                ['core/group', ['className' => 'film-content'], [
+                    ['core/heading', ['level' => 2, 'content' => 'Synopsis']],
+                    ['core/paragraph', ['placeholder' => 'Add film synopsis here...']],
+                    ['filmhanterare/showtimes', []]
+                ]]
+            ],
+            'template_lock'     => 'all',
             'show_in_admin_bar' => true,
             'show_in_nav_menus' => true,
             'can_export'        => true,
