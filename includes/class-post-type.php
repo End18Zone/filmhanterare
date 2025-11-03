@@ -51,26 +51,63 @@ class Filmhanterare_PostType {
             'menu_position'     => 5,
             'menu_icon'         => 'dashicons-video-alt3',
             'template'          => [
-                ['core/group', ['className' => 'film-header'], [
-                    ['core/columns', [], [
+                ['core/group', [
+                    'className' => 'film-header',
+                    'backgroundColor' => 'contrast',
+                    'align' => 'full'
+                ], [
+                    ['core/columns', ['align' => 'wide'], [
                         ['core/column', ['width' => 33], [
-                            ['core/image', ['className' => 'film-poster']]
+                            ['core/image', [
+                                'className' => 'film-poster',
+                                'align' => 'center',
+                                'sizeSlug' => 'large'
+                            ]]
                         ]],
                         ['core/column', ['width' => 67], [
-                            ['core/heading', ['level' => 1, 'className' => 'film-title']],
+                            ['core/heading', [
+                                'level' => 1,
+                                'className' => 'film-title has-text-align-left'
+                            ]],
                             ['core/group', ['className' => 'film-meta'], [
-                                ['filmhanterare/film-details', []]
+                                ['core/paragraph', [
+                                    'className' => 'film-details',
+                                    'placeholder' => 'Film details will appear here automatically'
+                                ]]
                             ]]
                         ]]
                     ]]
                 ]],
-                ['core/group', ['className' => 'film-content'], [
-                    ['core/heading', ['level' => 2, 'content' => 'Synopsis']],
-                    ['core/paragraph', ['placeholder' => 'Add film synopsis here...']],
-                    ['filmhanterare/showtimes', []]
+                ['core/group', [
+                    'className' => 'film-content',
+                    'align' => 'wide'
+                ], [
+                    ['core/heading', [
+                        'level' => 2,
+                        'content' => 'Synopsis',
+                        'className' => 'has-text-align-left'
+                    ]],
+                    ['core/paragraph', [
+                        'placeholder' => 'Add film synopsis here...',
+                        'className' => 'film-synopsis'
+                    ]],
+                    ['core/group', [
+                        'className' => 'film-showtimes',
+                        'backgroundColor' => 'secondary'
+                    ], [
+                        ['core/heading', [
+                            'level' => 2,
+                            'content' => 'Showtimes',
+                            'className' => 'has-text-align-center'
+                        ]],
+                        ['core/paragraph', [
+                            'className' => 'showtimes-notice has-text-align-center',
+                            'placeholder' => 'Showtimes will appear here automatically'
+                        ]]
+                    ]]
                 ]]
             ],
-            'template_lock'     => 'all',
+            'template_lock'     => 'insert',
             'show_in_admin_bar' => true,
             'show_in_nav_menus' => true,
             'can_export'        => true,
