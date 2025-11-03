@@ -69,13 +69,10 @@ class Filmhanterare_MetaBoxes {
         $minuter = $total_minuter % 60;
         
         // Age limits
-        $aldersgranser = [
-            '' => __('Select age limit', 'filmhanterare'),
-            'B' => __('Child Approved', 'filmhanterare'),
-            '7' => __('From 7 years', 'filmhanterare'),
-            '11' => __('From 11 years', 'filmhanterare'),
-            '15' => __('From 15 years', 'filmhanterare')
-        ];
+        $aldersgranser = array_merge(
+            ['' => __('Select age limit', 'filmhanterare')],
+            Filmhanterare\Filmhanterare_PostType::get_age_rating_labels()
+        );
         ?>
         
         <div class="filmhanterare-grid">

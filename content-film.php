@@ -38,16 +38,9 @@ $featured_image = get_the_post_thumbnail_url(get_the_ID(), 'full');
                         
                         <div class="film-meta">
                             <?php if ($aldersgrans) : ?>
-                                <?php
-                                $labels = [
-                                    'B' => __('Child Approved', 'filmhanterare'),
-                                    '7' => __('From 7 years', 'filmhanterare'),
-                                    '11' => __('From 11 years', 'filmhanterare'),
-                                    '15' => __('From 15 years', 'filmhanterare')
-                                ];
-                                if (isset($labels[$aldersgrans])) :
-                                ?>
-                                    <span class="film-certification"><?php echo esc_html($labels[$aldersgrans]); ?></span>
+                                <?php $age_label = Filmhanterare\Filmhanterare_PostType::get_age_rating_label($aldersgrans); ?>
+                                <?php if ($age_label) : ?>
+                                    <span class="film-certification"><?php echo esc_html($age_label); ?></span>
                                 <?php endif; ?>
                             <?php endif; ?>
                             

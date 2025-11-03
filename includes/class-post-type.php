@@ -90,4 +90,29 @@ class Filmhanterare_PostType {
 
         register_taxonomy('film_genre', ['film'], $args);
     }
+
+    /**
+     * Get the age rating labels.
+     *
+     * @return array Array of age rating labels.
+     */
+    public static function get_age_rating_labels() {
+        return [
+            'B' => 'Barntillåten',
+            '7' => 'Från 7 år',
+            '11' => 'Från 11 år',
+            '15' => 'Från 15 år'
+        ];
+    }
+
+    /**
+     * Get a specific age rating label.
+     *
+     * @param string $rating The age rating key.
+     * @return string|null The age rating label or null if not found.
+     */
+    public static function get_age_rating_label($rating) {
+        $labels = self::get_age_rating_labels();
+        return isset($labels[$rating]) ? $labels[$rating] : null;
+    }
 }

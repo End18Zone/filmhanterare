@@ -118,16 +118,11 @@ get_header(); ?>
                                 
                                 $aldersgrans = get_post_meta(get_the_ID(), '_film_aldersgrans', true);
                                 if ($aldersgrans) {
-                                    $labels = [
-                                        'B' => __('Child Approved', 'filmhanterare'),
-                                        '7' => __('From 7 years', 'filmhanterare'),
-                                        '11' => __('From 11 years', 'filmhanterare'),
-                                        '15' => __('From 15 years', 'filmhanterare')
-                                    ];
-                                    if (isset($labels[$aldersgrans])) {
+                                    $age_label = Filmhanterare\Filmhanterare_PostType::get_age_rating_label($aldersgrans);
+                                    if ($age_label) {
                                         printf(
                                             '<span class="film-age-limit">%s</span>',
-                                            esc_html($labels[$aldersgrans])
+                                            esc_html($age_label)
                                         );
                                     }
                                 }
